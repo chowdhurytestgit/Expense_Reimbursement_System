@@ -31,6 +31,9 @@ export default function DashboardLayout() {
             <Link to="/" className="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition">
               <PieChart className="w-5 h-5 mr-3" /> Dashboard
             </Link>
+            <Link to="/reports" className="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition">
+              <FileText className="w-5 h-5 mr-3" /> Expense Reports
+            </Link>
           </nav>
         </div>
 
