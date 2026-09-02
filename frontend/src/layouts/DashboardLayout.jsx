@@ -1,10 +1,11 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { Bell, FileText, PieChart, CheckSquare, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from '../services/api';
 
 export default function DashboardLayout() {
   const [alertCount, setAlertCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('/dashboard/alerts').then(res => {
@@ -12,16 +13,36 @@ export default function DashboardLayout() {
     }).catch(err => console.log(err));
   }, []);
 
+  const handleLogout = () => {
+    // Clear token or authentication storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Redirect to login page
+    navigate('/login');
+  };
+
   return (
     <div className="flex h-screen bg-slate-50 font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col">
-        <div className="p-6 text-2xl font-bold tracking-tight text-indigo-400">BUSY Expense</div>
-        <nav className="flex-1 px-4 space-y-2">
-          <Link to="/" className="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg">
-            <PieChart className="w-5 h-5 mr-3" /> Dashboard
-          </Link>
-        </nav>
+      <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between">
+        <div>
+          <div className="p-6 text-2xl font-bold tracking-tight text-indigo-400">BUSY Expense</div>
+          <nav className="flex-1 px-4 space-y-2">
+            <Link to="/" className="flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition">
+              <PieChart className="w-5 h-5 mr-3" /> Dashboard
+            </Link>
+          </nav>
+        </div>
+
+        {/* Logout Section at the bottom of the sidebar */}
+        <div className="p-4 border-t border-slate-800">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-3 text-red-400 hover:bg-slate-800 hover:text-red-300 rounded-lg transition font-medium"
+          >
+            <LogOut className="w-5 h-5 mr-3" /> Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
