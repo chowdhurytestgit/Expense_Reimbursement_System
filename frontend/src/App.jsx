@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './pages/Dashboard';
+import Reports from './pages/Reports';
+import CreateReport from './pages/CreateReport';
 
 // Protected Route wrapper to secure the dashboard
 const ProtectedRoute = ({ children }) => {
@@ -19,13 +21,15 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Dashboard Routes */}
+        {/* Protected Dashboard & Expense Reports Routes */}
         <Route path="/" element={
           <ProtectedRoute>
             <DashboardLayout />
           </ProtectedRoute>
         }>
           <Route index element={<Dashboard />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="create-report" element={<CreateReport />} />
         </Route>
 
         {/* Catch-all redirect */}
