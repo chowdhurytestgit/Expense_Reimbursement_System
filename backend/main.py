@@ -9,12 +9,15 @@ from models import User
 from auth import get_password_hash, verify_password, create_access_token
 from schemas import UserCreate, UserResponse
 
+# Import your routers from the routers folder
+from routers import dashboard, search, lines, reports
+
 # Automatically create database tables locally
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Expense Reimbursement API", version="1.0.0")
 
-# Enable CORS for React frontend development
+# Enable CORS for React frontend development and live Vercel deployment
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,6 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register Authentication routes
 @app.post("/auth/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user_in.email).first()
@@ -53,6 +57,12 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         )
     access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
+
+# Include all the feature routers (dashboard, search, lines, reports)
+app.include_router(dashboard.router)
+app.include_router(search.router)
+app.include_router(lines.router)
+app.include_router(reports.router)
 
 @app.get("/")
 def health_check():
