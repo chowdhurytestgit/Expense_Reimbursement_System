@@ -5,7 +5,7 @@ import API from '../services/api';
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('employee'); // Default role
+  const [role, setRole] = useState('EMPLOYEE'); // Default set to uppercase to match backend Enum
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -14,18 +14,19 @@ export default function Register() {
     setError('');
 
     try {
-      // Matches the backend endpoint @app.post("/auth/register") and includes a default name
-      await API.post('/auth/register', { 
+      const response = await API.post('/auth/register', { 
         email, 
         password, 
         role, 
-        name: email.split('@')[0] 
+        name: email ? email.split('@')[0] : 'User'
       });
       
+      console.log("Registration success:", response.data);
       alert('Account created successfully! Please sign in.');
       navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      console.error("Registration error details:", err);
+      setError(err.response?.data?.detail || err.message || 'Registration failed.');
     }
   };
 
@@ -68,7 +69,6 @@ export default function Register() {
               />
             </div>
 
-            {/* ROLE SELECTION RADIO BUTTONS */}
             <div>
               <label className="text-sm font-medium text-slate-700 block mb-2">Select Account Role</label>
               <div className="flex gap-6">
@@ -76,8 +76,8 @@ export default function Register() {
                   <input
                     type="radio"
                     name="role"
-                    value="employee"
-                    checked={role === 'employee'}
+                    value="EMPLOYEE"
+                    checked={role === 'EMPLOYEE'}
                     onChange={(e) => setRole(e.target.value)}
                     className="text-indigo-600 focus:ring-indigo-500"
                   />
@@ -87,8 +87,8 @@ export default function Register() {
                   <input
                     type="radio"
                     name="role"
-                    value="approver"
-                    checked={role === 'approver'}
+                    value="APPROVER"
+                    checked={role === 'APPROVER'}
                     onChange={(e) => setRole(e.target.value)}
                     className="text-indigo-600 focus:ring-indigo-500"
                   />
