@@ -5,16 +5,16 @@ import { DollarSign, FileClock, CheckCircle, CreditCard } from 'lucide-react';
 
 export default function Dashboard() {
   const [metrics, setMetrics] = useState({
-    awaiting_approval: 0,
-    total_due: 0.00,
-    approved_this_week: 0,
-    paid_this_week: 0
+    awaitingApproval: 0,
+    totalDue: 0.00,
+    approvedThisWeek: 0,
+    paidThisWeek: 0
   });
 
   useEffect(() => {
     API.get('/dashboard/metrics')
       .then(res => setMetrics(res.data))
-      .catch(err => console.log("Dashboard metrics API not active yet, using defaults."));
+      .catch(err => console.log("Dashboard metrics API error:", err));
   }, []);
 
   return (
@@ -26,7 +26,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">Awaiting Approval</p>
-            <h3 className="text-2xl font-bold text-slate-800">{metrics.awaiting_approval}</h3>
+            <h3 className="text-2xl font-bold text-slate-800">{metrics.awaitingApproval}</h3>
           </div>
         </Card>
         
@@ -36,7 +36,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">Total Due</p>
-            <h3 className="text-2xl font-bold text-slate-800">${Number(metrics.total_due).toFixed(2)}</h3>
+            <h3 className="text-2xl font-bold text-slate-800">${Number(metrics.totalDue || 0).toFixed(2)}</h3>
           </div>
         </Card>
 
@@ -46,7 +46,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">Approved This Week</p>
-            <h3 className="text-2xl font-bold text-slate-800">{metrics.approved_this_week}</h3>
+            <h3 className="text-2xl font-bold text-slate-800">{metrics.approvedThisWeek}</h3>
           </div>
         </Card>
 
@@ -56,7 +56,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">Paid This Week</p>
-            <h3 className="text-2xl font-bold text-slate-800">{metrics.paid_this_week}</h3>
+            <h3 className="text-2xl font-bold text-slate-800">{metrics.paidThisWeek}</h3>
           </div>
         </Card>
       </div>
