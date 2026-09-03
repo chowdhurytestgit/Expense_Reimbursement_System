@@ -14,7 +14,14 @@ export default function Register() {
     setError('');
 
     try {
-      await API.post('/auth/signup', { email, password, role });
+      // Matches the backend endpoint @app.post("/auth/register") and includes a default name
+      await API.post('/auth/register', { 
+        email, 
+        password, 
+        role, 
+        name: email.split('@')[0] 
+      });
+      
       alert('Account created successfully! Please sign in.');
       navigate('/login');
     } catch (err) {
