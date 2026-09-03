@@ -7,7 +7,7 @@
 
 ## Notes for the reviewer
 
-The FastAPI backend is hosted on Render's free tier. The first request may take up to 50 seconds to complete as the container wakes up from an idle state. The PostgreSQL database is hosted on Supabase and is always active. 
+The FastAPI backend is hosted on Render's free tier. The first request may take up to 30-50 seconds to complete as the container wakes up from an idle state. To ensure a smooth user experience, explicit loading states with informative status text ("waking up server") have been added to the frontend login and registration flows so evaluators know this is expected infrastructure behavior rather than a bug. The PostgreSQL database is hosted on Supabase and is always active. 
 
 For the bulk approval workflow (Goal 7), selecting multiple reports evaluates them sequentially on the server. If an approver accidentally selects a report they own, it will gracefully fail that specific item and list the reason in the UI, while successfully approving the rest.
 

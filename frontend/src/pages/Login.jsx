@@ -6,11 +6,13 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
       const formData = new URLSearchParams();
@@ -34,6 +36,8 @@ export default function Login() {
       navigate('/'); 
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,9 +83,12 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 font-medium transition duration-200 shadow-sm"
+            disabled={loading}
+            className={`w-full py-3 px-4 border border-transparent rounded-lg text-white font-medium transition duration-200 shadow-sm ${
+              loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+            }`}
           >
-            Sign In
+            {loading ? 'Connecting to server (waking up free tier)...' : 'Sign In'}
           </button>
         </form>
 

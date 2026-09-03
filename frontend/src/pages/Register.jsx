@@ -8,11 +8,13 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('EMPLOYEE'); // Default set to uppercase to match backend Enum
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
       const response = await API.post('/auth/register', { 
@@ -28,6 +30,8 @@ export default function Register() {
     } catch (err) {
       console.error("Registration error details:", err);
       setError(err.response?.data?.detail || err.message || 'Registration failed.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,9 +117,12 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 font-medium transition duration-200 shadow-sm"
+            disabled={loading}
+            className={`w-full py-3 px-4 border border-transparent rounded-lg text-white font-medium transition duration-200 shadow-sm ${
+              loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+            }`}
           >
-            Register
+            {loading ? 'Creating account (waking up server)...' : 'Register'}
           </button>
         </form>
 
