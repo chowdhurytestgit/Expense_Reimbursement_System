@@ -38,3 +38,7 @@ def get_dashboard_metrics(db: Session = Depends(get_db), current_user: User = De
             "approvedThisWeek": 0,
             "paidThisWeek": 0
         }
+
+@router.get("/alerts")
+def get_dashboard_alerts(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return []
