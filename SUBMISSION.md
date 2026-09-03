@@ -3,7 +3,7 @@
 ## Links
 
 - **GitHub repository:** https://github.com/chowdhurytestgit/Expense_Reimbursement_System
-- **Live application:** https://expense-reimbursement-frontend.vercel.app
+- **Live application:** https://expense-reimbursement-system-chi.vercel.app
 
 ## Notes for the reviewer
 
