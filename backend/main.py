@@ -55,9 +55,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Optional: Include role in the token payload if your frontend checks it directly from token claims
     access_token = create_access_token(data={"sub": user.email, "role": user.role})
-    return {"access_token": access_token, "token_type": "bearer"}
+    
+    # Return access_token along with the user's actual registered name
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "name": user.name 
+    }
 
 # Include all the feature routers (dashboard, search, lines, reports)
 app.include_router(dashboard.router)

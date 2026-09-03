@@ -24,9 +24,12 @@ export default function Login() {
       // Save token
       localStorage.setItem('token', response.data.access_token);
 
-      // Save user's name for the dashboard welcome banner
-      const displayName = response.data.name || email.split('@')[0];
-      localStorage.setItem('userName', displayName);
+      // Save the actual full name returned from the backend database
+      if (response.data.name) {
+        localStorage.setItem('userName', response.data.name);
+      } else {
+        localStorage.setItem('userName', email.split('@')[0]);
+      }
 
       navigate('/'); 
     } catch (err) {
