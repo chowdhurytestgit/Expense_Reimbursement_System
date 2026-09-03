@@ -21,7 +21,13 @@ export default function Login() {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
 
+      // Save token
       localStorage.setItem('token', response.data.access_token);
+
+      // Save user's name for the dashboard welcome banner
+      const displayName = response.data.name || email.split('@')[0];
+      localStorage.setItem('userName', displayName);
+
       navigate('/'); 
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');

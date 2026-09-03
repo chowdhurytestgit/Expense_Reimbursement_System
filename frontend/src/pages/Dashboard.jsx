@@ -18,27 +18,26 @@ export default function Dashboard() {
       .then(res => setMetrics(res.data))
       .catch(err => console.log("Dashboard metrics API error:", err));
 
-    // Fetch user details or fallback gracefully
-    API.get('/auth/me')
-      .then(res => {
-        if (res.data?.name) {
-          setUserName(res.data.name);
-        }
-      })
-      .catch(() => {
-        // Fallback name if profile endpoint isn't wired yet
-        setUserName('Member');
-      });
+    // Get user name from localStorage if stored during login, or parse token
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+    } else {
+      // Fallback: check if we can decode or use a generic name
+      setUserName('Member');
+    }
   }, []);
 
   return (
     <div className="space-y-6">
-      {/* Welcome Greeting Header */}
+      {/* Clean Welcome Greeting Banner (No duplicate Overview title) */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Overview</h1>
+          <h2 className="text-xl font-bold text-slate-900">
+            Welcome back, <span className="text-indigo-600">{userName}</span>! 👋
+          </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Welcome back, <span className="font-semibold text-indigo-600">{userName}</span>!
+            Here is what's happening with your expense reports today.
           </p>
         </div>
       </div>
