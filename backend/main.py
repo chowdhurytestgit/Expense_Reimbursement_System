@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import uuid
 
-# FIX: Import directly from routers since main.py is already in the backend folder
+# Import directly from routers since main.py is in the backend folder
 from routers import dashboard, search, lines, reports
 from database import engine, Base, get_db
 from models import User
@@ -38,7 +38,7 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
         email=user_in.email,
         hashed_password=hashed_pw,
         name=user_in.name,
-        role=user_in.role
+        role=user_in.role  # Captures the 'employee' or 'approver' role sent from the frontend radio buttons
     )
     db.add(new_user)
     db.commit()
@@ -54,7 +54,9 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(data={"sub": user.email})
+    
+    # Optional: Include role in the token payload if your frontend checks it directly from token claims
+    access_token = create_access_token(data={"sub": user.email, "role": user.role})
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Include all the feature routers (dashboard, search, lines, reports)
