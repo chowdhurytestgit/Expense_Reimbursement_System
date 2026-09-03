@@ -4,14 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import uuid
 
-from backend.routers import dashboard, lines, reports
+# FIX: Import directly from routers since main.py is already in the backend folder
+from routers import dashboard, search, lines, reports
 from database import engine, Base, get_db
 from models import User
 from auth import get_password_hash, verify_password, create_access_token
 from schemas import UserCreate, UserResponse
-
-# Import your routers from the routers folder
-from backend.routers import search
 
 # Automatically create database tables locally
 Base.metadata.create_all(bind=engine)
