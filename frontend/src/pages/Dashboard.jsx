@@ -34,7 +34,7 @@ export default function Dashboard() {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-slate-900">
-            Welcome back, <span className="text-indigo-600">{userName}</span>! 👋
+            Welcome, <span className="text-indigo-600">{userName}</span>! 👋
           </h2>
           <p className="text-sm text-slate-500 mt-1">
             Here is what's happening with your expense reports today.
