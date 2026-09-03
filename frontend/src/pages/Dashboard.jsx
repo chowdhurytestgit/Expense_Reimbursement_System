@@ -10,15 +10,39 @@ export default function Dashboard() {
     approvedThisWeek: 0,
     paidThisWeek: 0
   });
+  const [userName, setUserName] = useState('User');
 
   useEffect(() => {
+    // Fetch metrics
     API.get('/dashboard/metrics')
       .then(res => setMetrics(res.data))
       .catch(err => console.log("Dashboard metrics API error:", err));
+
+    // Fetch user details or fallback gracefully
+    API.get('/auth/me')
+      .then(res => {
+        if (res.data?.name) {
+          setUserName(res.data.name);
+        }
+      })
+      .catch(() => {
+        // Fallback name if profile endpoint isn't wired yet
+        setUserName('Member');
+      });
   }, []);
 
   return (
     <div className="space-y-6">
+      {/* Welcome Greeting Header */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Overview</h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Welcome back, <span className="font-semibold text-indigo-600">{userName}</span>!
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="p-6 flex items-center shadow-sm border-slate-100">
           <div className="p-4 bg-blue-50 rounded-lg text-blue-600 mr-4">

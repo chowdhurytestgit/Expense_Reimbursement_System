@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import API from '../services/api';
 
 export default function Register() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('EMPLOYEE'); // Default set to uppercase to match backend Enum
@@ -18,7 +19,7 @@ export default function Register() {
         email, 
         password, 
         role, 
-        name: email ? email.split('@')[0] : 'User'
+        name: fullName // Passes the user-entered full name
       });
       
       console.log("Registration success:", response.data);
@@ -46,6 +47,18 @@ export default function Register() {
 
         <form className="mt-8 space-y-6" onSubmit={handleRegister}>
           <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-slate-700">Full Name</label>
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="John Doe"
+              />
+            </div>
+
             <div>
               <label className="text-sm font-medium text-slate-700">Email Address</label>
               <input
