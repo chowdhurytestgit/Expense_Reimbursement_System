@@ -10,29 +10,27 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 @router.get("/metrics")
 def get_dashboard_metrics(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     try:
-        # Check user role and calculate safe counts
         if current_user.role == RoleEnum.APPROVER:
-            awaiting_approval = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.SUBMITTED).count()
-            total_due = db.query(func.sum(ExpenseReport.total_amount)).filter(ExpenseReport.status == StatusEnum.SUBMITTED).scalar() or 0.0
+            awaiting_approval = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.SUBMITTED).count() or 0
+            total_due_scalar = db.query(func.sum(ExpenseReport.total_amount)).filter(ExpenseReport.status == StatusEnum.SUBMITTED).scalar()
         else:
-            awaiting_approval = db.query(ExpenseReport).filter(ExpenseReport.owner_id == current_user.id, ExpenseReport.status == StatusEnum.SUBMITTED).count()
-            total_due = db.query(func.sum(ExpenseReport.total_amount)).filter(ExpenseReport.owner_id == current_user.id, ExpenseReport.status.in_([StatusEnum.DRAFT, StatusEnum.SUBMITTED])).scalar() or 0.0
+            awaiting_approval = db.query(ExpenseReport).filter(ExpenseReport.owner_id == current_user.id, ExpenseReport.status == StatusEnum.SUBMITTED).count() or 0
+            total_due_scalar = db.query(func.sum(ExpenseReport.total_amount)).filter(ExpenseReport.owner_id == current_user.id, ExpenseReport.status.in_([StatusEnum.DRAFT, StatusEnum.SUBMITTED])).scalar()
 
-        approved_this_week = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.APPROVED).count()
+        total_due = float(total_due_scalar) if total_due_scalar is not None else 0.0
+        approved_this_week = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.APPROVED).count() or 0
         
-        # Safely check if PAID status exists in your Enum
         paid_this_week = 0
         if hasattr(StatusEnum, 'PAID'):
-            paid_this_week = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.PAID).count()
+            paid_this_week = db.query(ExpenseReport).filter(ExpenseReport.status == StatusEnum.PAID).count() or 0
 
         return {
-            "awaitingApproval": awaiting_approval,
+            "awaitingApproval": int(awaiting_approval),
             "totalDue": float(total_due),
-            "approvedThisWeek": approved_this_week,
-            "paidThisWeek": paid_this_week
+            "approvedThisWeek": int(approved_this_week),
+            "paidThisWeek": int(paid_this_week)
         }
     except Exception as e:
-        # Fallback to zeros instead of crashing with a 500 Internal Server Error
         print(f"Dashboard metrics error: {str(e)}")
         return {
             "awaitingApproval": 0,
